@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propiedades sugeridas - Zakiflow Inmobiliario</title>
+  <style>
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #f4f7ff 0%, #e4ebf7 40%, #f7f9fc 100%);
+      color: #08121f;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1120px;
+      width: 100%;
+      padding: 32px 20px 40px;
+      box-sizing: border-box;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .logo-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #004aad, #0070f3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 17px;
+      color: #004aad;
+      letter-spacing: 0.4px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 4px 0 6px;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      max-width: 520px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(0, 74, 173, 0.06);
+      border-radius: 999px;
+      font-size: 12px;
+      color: #004aad;
+      margin-bottom: 18px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.10);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid rgba(148, 163, 253, 0.1);
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, rgba(0,74,173,0.12), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+      border-color: rgba(37, 99, 235, 0.26);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eff6ff;
+      font-size: 10px;
+      color: #2563eb;
+      font-weight: 500;
+      width: fit-content;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .location {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #4b5563;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .desc {
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      text-decoration: none;
+      transition: all 0.22s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #004aad, #2563eb);
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 16px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-ghost {
+      background: #f3f4ff;
+      color: #1d4ed8;
+      border: 1px solid rgba(129, 140, 248, 0.4);
+    }
+
+    .btn-ghost:hover {
+      background: #e0e7ff;
+    }
+
+    .disclaimer {
+      margin-top: 22px;
+      font-size: 11px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      margin-top: 14px;
+      font-size: 12px;
+    }
+
+    .back-link a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+      }
+      .page {
+        padding-top: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="logo">
+      <div class="logo-icon">Z</div>
+      <div class="logo-text">Zakiflow Inmobiliario</div>
+    </div>
+
+    <div class="highlight">
+      ⚡ Resultados generados automáticamente a partir de la solicitud del cliente y la llamada asistida por IA.
+    </div>
+
+    <h1>Propiedades sugeridas · Piso cerca de la playa en Torre del Mar · ≤ 250.000 €</h1>
+    <p class="subtitle">
+      Ejemplo realista de cómo tu asistente con IA puede filtrar en segundos
+      propiedades ajustadas al presupuesto y ubicación del cliente, y conectarlo con tu equipo.
+    </p>
+
+    <div class="cards">
+      <!-- PROPIEDAD 1 - 109263223 -->
+      <div class="card">
+        <div class="tag">Ejemplo IA · Residencial con piscina</div>
+        <div class="price">249.900 € · 1 dormitorio</div>
+        <div class="location">Poniente-Faro, Torre del Mar</div>
+        <div class="meta">
+          <span>📐 51 m² aprox.</span>
+          <span>🛏️ 1 hab</span>
+          <span>🛁 1 baño</span>
+          <span>🚗 Parking y trastero</span>
+          <span>🏊‍♂️ Piscina y pista de pádel</span>
+        </div>
+        <div class="desc">
+          Apartamento en un complejo moderno con zonas comunes y terraza,
+          ideal como segunda residencia o inversión cerca de la playa.
+        </div>
+        <div class="cta-row">
+          <a class="btn-primary" href="https://www.idealista.com/en/inmueble/109263223/" target="_blank" rel="noopener noreferrer">
+            🔍 Ver detalles en idealista
+          </a>
+          <a class="btn-ghost" href="https://wa.me/34651492562?text=Hola%20Zakiflow%2C%20acabo%20de%20ver%20la%20propiedad%20de%20249.900%E2%82%AC%20en%20Poniente-Faro%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">
+            📅 Reservar visita por WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- PROPIEDAD 2 - 109820110 -->
+      <div class="card">
+        <div class="tag">Ejemplo IA · Selección automatizada</div>
+        <div class="price">Propiedad dentro del rango objetivo</div>
+        <div class="location">Torre del Mar · Detalle completo en idealista</div>
+        <div class="meta">
+          <span>🌊 Zona costera</span>
+          <span>✅ Dentro del presupuesto</span>
+          <span>📍 Seleccionada según criterios del cliente</span>
+        </div>
+        <div class="desc">
+          Esta tarjeta muestra cómo la IA puede añadir automáticamente propiedades
+          verificadas desde el portal del cliente. Los detalles completos se consultan
+          directamente en idealista a través del enlace oficial.
+        </div>
+        <div class="cta-row">
+          <a class="btn-primary" href="https://www.idealista.com/en/inmueble/109820110/" target="_blank" rel="noopener noreferrer">
+            🔍 Ver propiedad en idealista
+          </a>
+          <a class="btn-ghost" href="https://wa.me/34651492562?text=Hola%20Zakiflow%2C%20he%20visto%20la%20segunda%20propiedad%20del%20ejemplo%20y%20quiero%20que%20me%20ayud%C3%A9is%20a%20configurar%20este%20flujo%20para%20mi%20inmobiliaria." target="_blank" rel="noopener noreferrer">
+            🤝 Hablar sobre automatización
+          </a>
+        </div>
+      </div>
+
+      <!-- PROPIEDAD 3 - 109792256 -->
+      <div class="card">
+        <div class="tag">Ejemplo IA · Centro y playa</div>
+        <div class="price">206.000 € · 1 dormitorio</div>
+        <div class="location">Centro, Torre del Mar</div>
+        <div class="meta">
+          <span>📐 60 m² aprox.</span>
+          <span>🛏️ 1 hab</span>
+          <span>🛁 1 baño</span>
+          <span>🚶‍♂️ A pocos minutos de la playa</span>
+        </div>
+        <div class="desc">
+          Vivienda luminosa en zona céntrica, rodeada de servicios,
+          perfecta como opción funcional dentro del presupuesto del cliente.
+        </div>
+        <div class="cta-row">
+          <a class="btn-primary" href="https://www.idealista.com/en/inmueble/109792256/" target="_blank" rel="noopener noreferrer">
+            🔍 Ver detalles en idealista
+          </a>
+          <a class="btn-ghost" href="https://wa.me/34651492562?text=Hola%20Zakiflow%2C%20me%20interesa%20el%20apartamento%20del%20Centro%20por%20206.000%E2%82%AC.%20Quiero%20m%C3%A1s%20detalles." target="_blank" rel="noopener noreferrer">
+            📅 Solicitar información
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <p class="disclaimer">
+      Este panel es una demostración. Los enlaces dirigen a anuncios reales en idealista
+      propiedad de sus respectivos anunciantes. Zakiflow muestra cómo un asistente con IA
+      puede combinar datos del cliente, llamadas, WhatsApp y propiedades en un flujo único,
+      totalmente automatizado.
+    </p>
+
+    <div class="back-link">
+      ⬅️ <a href="demo.html">Volver a la demo del chat y llamada</a>
+    </div>
+  </div>
+</body>
+</html>
