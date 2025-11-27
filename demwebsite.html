@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zakiflow Inmobiliario - Demo Premium AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset and Premium Theme */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #121212; /* Dunkler Hintergrund */
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .chatbox {
+      width: 400px; /* Etwas breiter für Eleganz */
+      height: 680px;
+      background: #1f1f1f; /* Dunkelgrau */
+      border-radius: 28px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Tiefer Schatten & Chrom-Rand */
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      transform: scale(0.95); /* Leichter 3D-Effekt */
+      transition: transform 0.3s ease;
+    }
+    .header {
+      background: linear-gradient(90deg, #333333, #555555); /* Chrom-Verlauf */
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+    }
+    .header::after { /* Dezenter AI Indikator */
+        content: 'AI Assistant';
+        font-size: 10px;
+        font-weight: 300;
+        display: block;
+        opacity: 0.7;
+        margin-top: 2px;
+    }
+    .messages {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      /* Edle Scrollbar */
+      scrollbar-width: thin;
+      scrollbar-color: #555 #1f1f1f;
+    }
+    .messages::-webkit-scrollbar { width: 8px; }
+    .messages::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
+    .messages::-webkit-scrollbar-track { background: #1f1f1f; }
+
+    .msg {
+      padding: 12px 16px;
+      border-radius: 20px;
+      max-width: 85%;
+      line-height: 1.5;
+      font-size: 15px;
+      word-wrap: break-word;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      font-weight: 400;
+      position: relative;
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* 🤖 Bot Message (Silber/Blau-Akzent) */
+    .bot { 
+        background: #2a2a2a; 
+        color: #e0e0e0; 
+        align-self: flex-start;
+        border-bottom-left-radius: 4px; /* Unkonventioneller Schnitt */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* 👤 User Message (Weiß/Chrom-Akzent) */
+    .user { 
+        background: linear-gradient(145deg, #f0f0f0, #d0d0d0); 
+        color: #1f1f1f; 
+        align-self: flex-end; 
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-weight: 500;
+    }
+
+    /* 🧠 AI Denk-Animation */
+    .thinking {
+        background: #333;
+        color: #aaa;
+        padding: 8px 16px;
+        border-radius: 18px;
+        width: fit-content;
+        align-self: flex-start;
+        animation: pulse 1.5s infinite;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    /* 📞 Anruf-Kontrolle & Timer */
+    .call-flow {
+      background: #2a2a2a;
+      padding: 15px;
+      border-top: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .call-controls {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+    }
+    #callTimer {
+        font-size: 18px;
+        font-weight: 700;
+        color: #00ff9d; /* Leuchtendes Grün für Active Call */
+        min-width: 60px;
+        text-align: center;
+    }
+    #stopCallBtn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
+    }
+    #stopCallBtn:hover { background: #c0392b; transform: translateY(-1px); }
+
+    /* 💬 WhatsApp (Final step) */
+    .whatsapp {
+      background: linear-gradient(90deg, #1ebe5d, #25d366); /* Grüner Verlauf */
+      color: white;
+      font-size: 14px;
+      border-radius: 20px;
+      align-self: flex-start;
+      font-weight: 600;
+    }
+    .whatsapp a {
+        color: #e0f8f8;
+        text-decoration: underline;
+    }
+    
+    /* 🔹 CTA Floating Banner (Unverändert, nur farblich angepasst) */
+    .cta-banner {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: linear-gradient(90deg, #00ff9d, #00d47d); /* Leuchtendes Grün */
+      color: #1f1f1f;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(0,255,157,0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      z-index: 10;
+    }
+    .cta-banner:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(0,255,157,0.6);
+    }
+
+    /* ❓ Antwort-Buttons für Call-Zustimmung */
+    .choice-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        align-self: center;
+    }
+    .choice-buttons button {
+        padding: 8px 15px;
+        border-radius: 18px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .btn-yes {
+        background: #00ff9d;
+        color: #1f1f1f;
+    }
+    .btn-yes:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0, 255, 157, 0.4); }
+
+    .btn-no {
+        background: #555;
+        color: white;
+    }
+    .btn-no:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(85, 85, 85, 0.4); }
+
+  </style>
+</head>
+<body onload="startDemo()"> <div class="chatbox">
+    <div class="header">Zakiflow Inmobiliario</div>
+    <div class="messages" id="chat">
+        <div class="thinking">Inicializando la Demo Premium...</div>
+    </div>
+    <div class="footer" id="footer" style="display: none;">
+        </div>
+  </div>
+
+  <audio id="callAudio" src="https://raw.githubusercontent.com/christianschroeder2210-star/websitedemo/main/ElevenLabs_2025-11-10T20_33_54_Sheila%20Espan%CC%83a%20-%20Social%20Media_pvc_sp112_s100_sb75_se0_b_m2.mp3"></audio>
+
+  <a class="cta-banner" href="https://wa.me/34651492562?text=Hola%20Zakiflow%2C%20quiero%20una%20demo%20personalizada%20para%20mi%20agencia." target="_blank" rel="noopener noreferrer">
+    🤖 Solicitar demo para tu agencia
+  </a>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const footer = document.getElementById("footer");
+    const callAudio = document.getElementById("callAudio");
+    let stepIndex = 0;
+    let timerInterval;
+
+    // Längere, interaktivere Konversation
+    const steps = [
+        { sender: "bot",  text: "👋 ¡Hola! Soy el **Asistente AI Premium** de Zakiflow Inmobiliario. Estoy analizando tu interés en la web. ¿Qué tipo de propiedad buscas hoy?" },
+        { sender: "user", text: "Busco un piso cerca de la playa en Torre del Mar." },
+        { sender: "bot",  text: "🔍 **Analizando base de datos...** Torre del Mar, ¡excelente elección! ¿Podrías especificar tu presupuesto máximo para filtrar con precisión?" },
+        { sender: "user", text: "Mi límite es de 250.000 €." },
+        { sender: "bot",  text: "✅ **Filtros aplicados.** Tengo tres opciones que cumplen: Ubicación ideal, cerca del mar, y dentro de tu presupuesto. Para explicarte los detalles de las hipotecas y las vistas, ¿**me permites hacerte una breve llamada** automatizada ahora mismo? Así resolvemos dudas en tiempo real." , action: "choice" },
+    ];
+
+    function addMessage(sender, text, extraClass = "") {
+      // Entfernt das Thinking-Feld, falls vorhanden
+      const thinkingDiv = document.querySelector(".thinking");
+      if (thinkingDiv) thinkingDiv.remove();
+
+      const div = document.createElement("div");
+      div.className = `msg ${sender} ${extraClass}`.trim();
+      div.innerHTML = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function addThinkingIndicator(delay) {
+        const div = document.createElement("div");
+        div.className = "thinking";
+        div.innerHTML = "🧠 AI pensando...";
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+        // Entfernt den Indicator, wenn der nächste Schritt beginnt
+        setTimeout(() => {
+            if (chat.contains(div)) div.remove();
+        }, delay);
+    }
+
+    function runStep() {
+      if (stepIndex >= steps.length) return;
+      const step = steps[stepIndex];
+      const delay = step.sender === 'user' ? 1500 : 1000; // Etwas längere Wartezeit für User-Antworten
+
+      setTimeout(() => {
+        addMessage(step.sender, step.text);
+        if (step.action === "choice") showCallChoice();
+        else {
+            stepIndex++;
+            if (stepIndex < steps.length) {
+                addThinkingIndicator(1200);
+                runStep();
+            }
+        }
+      }, delay);
+    }
+
+    // 📞 Call-Zustimmung anzeigen
+    function showCallChoice() {
+        const choiceDiv = document.createElement("div");
+        choiceDiv.className = "choice-buttons";
+        choiceDiv.innerHTML = `
+            <button class="btn-yes" onclick="handleCallChoice(true)">Sí, llama ahora</button>
+            <button class="btn-no" onclick="handleCallChoice(false)">No, prefiero por chat</button>
+        `;
+        chat.appendChild(choiceDiv);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function handleCallChoice(accept) {
+        // Entfernt die Choice Buttons
+        const choiceButtons = document.querySelector(".choice-buttons");
+        if (choiceButtons) choiceButtons.remove();
+
+        if (accept) {
+            addMessage("user", "¡Sí! Por favor, llámame para ver los detalles de las hipotecas.");
+            stepIndex++; // Geht über den Choice-Schritt hinaus
+            simulateCallFlow();
+        } else {
+            addMessage("user", "No, gracias. Prefiero que me envíes la información por chat.");
+            stepIndex++; // Geht über den Choice-Schritt hinaus
+            // Springt direkt zum WhatsApp/Link-Schritt
+            addMessage("bot", "Entendido. Te envío la información clave por un mensaje directo a WhatsApp en un momento.");
+            afterCall(false); // Führt die Post-Call-Schritte ohne tatsächlichen Anruf aus
+        }
+    }
+
+    // 📞 Anruf simulieren
+    function simulateCallFlow() {
+      footer.style.display = 'flex';
+      footer.className = 'call-flow';
+      footer.innerHTML = `
+          <p style="color: #ccc; margin: 0; font-size: 14px;">📞 **Llamada Automática AI en curso...**</p>
+          <div class="call-controls">
+              <span id="callTimer">00:00</span>
+              <button id="stopCallBtn" onclick="stopCall()">FINALIZAR LLAMADA</button>
+          </div>
+      `;
+      
+      let seconds = 0;
+      callAudio.currentTime = 0;
+      callAudio.play().catch(e => console.log("Audio playback failed:", e)); // Startet den Anruf
+
+      // Timer starten
+      timerInterval = setInterval(() => {
+          seconds++;
+          const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+          const sec = String(seconds % 60).padStart(2, '0');
+          document.getElementById('callTimer').textContent = `${min}:${sec}`;
+
+          // Stoppt den Timer, wenn das Audio endet
+          if (callAudio.ended) stopCall();
+      }, 1000);
+
+      // Stoppt den Timer, wenn das Audio von selbst endet
+      callAudio.onended = () => stopCall();
+    }
+
+    // 🛑 Anruf stoppen
+    function stopCall() {
+        clearInterval(timerInterval);
+        callAudio.pause();
+        callAudio.currentTime = 0;
+        afterCall(true); // Führt die Post-Call-Schritte aus
+    }
+
+    // ➡️ Schritte nach dem Anruf (oder nach Ablehnung)
+    function afterCall(wasCalled) {
+      footer.style.display = 'none';
+      
+      const audioCompletionMessage = wasCalled 
+        ? "🎙️ **Llamada completada:** El Asistente AI ha gestionado el contacto y ha cualificado al cliente."
+        : "💬 **Análisis de Chat:** El Asistente ha extraído los datos clave y está preparando las opciones.";
+      
+      setTimeout(() => {
+        addMessage("bot", audioCompletionMessage);
+      }, 1000);
+
+      // WhatsApp/Link Step
+      setTimeout(() => {
+        addMessage(
+          "bot",
+          "💬 **WhatsApp (auto):** Hola 👋, gracias por tu interacción. Aquí tienes las **3 Opciones Premium** cerca de la playa en Torre del Mar por hasta 250.000 € y la posibilidad de reservar visita:",
+          "whatsapp"
+        );
+      }, 3000);
+
+      // ✅ Link zur Zielseite (propiedades.html)
+      setTimeout(() => {
+        addMessage(
+          "bot",
+          "👉 <a href='propiedades.html' target='_blank' style='color: #00ff9d; font-weight: 700; text-decoration: none;'>VER PROPIEDADES Y AGENDAR VISITA VIP</a>"
+        );
+      }, 4500);
+    }
+
+    // 🚀 Startet die Demo (wird automatisch mit body onload aufgerufen)
+    function startDemo() {
+        chat.innerHTML = ""; // Chat leeren
+        addThinkingIndicator(100);
+        stepIndex = 0;
+        runStep();
+    }
+  </script>
+</body>
+</html>
